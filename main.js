@@ -23,6 +23,7 @@ app.use(cors());
 
 // add your routes here like this:
 aboutRoutes(app)
+healthRoutes(app)
 
 app.listen(PORT, () => {
   logger.warn(`Using log level: ${process.env.LOG_LEVEL}`)

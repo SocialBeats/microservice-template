@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: Microservice API
-  version: 2.0.0
+  version: unknown
   description: This is an OAS description of this Microservice REST API
 servers:
   - url: http://localhost:3000

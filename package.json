@@ -1,8 +1,8 @@
 {
   "scripts": {
     "start": "nodemon main.js",
-    "test": "vitest",
-    "test:watch": "vitest --watch"
+    "test": "cross-env NODE_ENV=test vitest",
+    "test:watch": "cross-env NODE_ENV=test vitest --watch"
   },
   "type": "module",
   "dependencies": {
@@ -17,8 +17,9 @@
     "winston": "^3.18.3"
   },
   "devDependencies": {
+    "cross-env": "^10.1.0",
     "nodemon": "^3.1.10",
-    "vitest": "^2.1.4",
-    "supertest": "^7.1.1"
+    "supertest": "^7.1.4",
+    "vitest": "^2.1.9"
   }
 }

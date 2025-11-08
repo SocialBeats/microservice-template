@@ -1,19 +1,26 @@
 import mongoose from "mongoose";
 import logger from "../logger.js";
 
-
 export const connectDB = async () => {
   try {
     const mongoUser = process.env.MONGOADMIN;
     const mongoPass = process.env.MONGOPASS;
-    let mongoUrl = process.env.MONGOURL;
 
-    // if no MONGOURL, skip connection
-    if (!mongoUrl) {
-      logger.warn("No MONGOURL provided — skipping MongoDB connection");
-      return;
+    let mongoUrl;
+
+    if (process.env.NODE_ENV === "test" && process.env.MONGOTESTURL) {
+      mongoUrl = process.env.MONGOTESTURL;
+      logger.info("Connecting to TEST database");
+    } else {
+      mongoUrl = process.env.MONGOURL;
+      logger.info("Connecting to MAIN database");
     }
-    // if auth credentials are provided, replace placeholders
+
+    if (!mongoUrl) {
+      logger.error("No MongoDB URL found — cannot connect.");
+      throw new Error("Missing MongoDB URL");
+    }
+
     if (mongoUrl.includes("ADMIN") && mongoUrl.includes("PASS")) {
       mongoUrl = mongoUrl
         .replace("ADMIN", mongoUser || "")
@@ -24,15 +31,9 @@ export const connectDB = async () => {
     logger.info("MongoDB connected successfully");
   } catch (err) {
     logger.error(`MongoDB connection error: ${err.message}`);
-    // don't kill process in development/test mode
-    if (process.env.NODE_ENV === "production") {
-      process.exit(1);
-    } else {
-      logger.warn("Running without database (development/test mode)");
-    }
+    process.exit(1);
   }
 };
-
 
 export const disconnectDB = async () => {
   try {

@@ -25,21 +25,19 @@ app.use(cors());
 aboutRoutes(app)
 healthRoutes(app)
 
-
-const isTest = process.env.NODE_ENV === "test" || process.env.VITEST;
-
-// only start server and connect to DB if not in test mode
-if (!isTest) {
-  await connectDB();
-
-  app.listen(PORT, () => {
-    logger.warn(`Using log level: ${process.env.LOG_LEVEL}`);
-    logger.info(`Server started on port ${PORT}`);
-    logger.info(`API running at http://localhost:${PORT}`);
-    logger.info(`Health at http://localhost:${PORT}/api/v1/health`);
-    logger.info(`Environment: ${process.env.NODE_ENV}`);
-  });
-}
-
-
+// Export app for tests. Do not remove this line
 export default app;
+
+if (process.env.NODE_ENV !== "test") {
+  
+    await connectDB();
+
+    app.listen(PORT, () => {
+      logger.warn(`Using log level: ${process.env.LOG_LEVEL}`);
+      logger.info(`Server started on port ${PORT}`);
+      logger.info(`API running at http://localhost:${PORT}`);
+      logger.info(`Health at http://localhost:${PORT}/api/v1/health`);
+      logger.info(`Environment: ${process.env.NODE_ENV}`);
+    });
+
+}

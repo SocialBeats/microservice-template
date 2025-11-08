@@ -1,4 +1,5 @@
 import { getVersion } from "../utils/versionUtils.js";
+import mongoose from "mongoose";
 
 
 export default function healthRoutes(app) {
@@ -39,8 +40,12 @@ export default function healthRoutes(app) {
      *                 environment:
      *                   type: string
      *                   example: "development"
+     *                 db:
+     *                   type: string
+     *                   example: connected
      */
     app.get("/api/v1/health", (req, res) => {
+        const dbStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
         res.status(200).json({
             status: "ok",
             message: "Health check successful",
@@ -48,6 +53,7 @@ export default function healthRoutes(app) {
             uptime: process.uptime(),
             timestamp: new Date().toISOString(),
             environment: process.env.NODE_ENV,
+            db: dbStatus
         });
     });
 }

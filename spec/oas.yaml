@@ -151,4 +151,7 @@ paths:
                   environment:
                     type: string
                     example: development
+                  db:
+                    type: string
+                    example: connected
 tags: []

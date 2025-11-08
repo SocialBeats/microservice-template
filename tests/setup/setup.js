@@ -1,9 +1,14 @@
-import supertest from "supertest";
+import request from "supertest";
 import app from "../../main.js";
+import { connectDB, disconnectDB } from "../../src/db.js";
 
-process.env.NODE_ENV = "test";
+beforeAll(async () => {
+  await connectDB();
+});
 
+afterAll(async () => {
+  await disconnectDB();
+});
 
-const request = supertest(app);
-
-export { request };
+// Export a ready-to-use Supertest instance
+export const api = request(app);

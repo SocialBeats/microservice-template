@@ -29,4 +29,7 @@ app.listen(PORT, () => {
   logger.warn(`Using log level: ${process.env.LOG_LEVEL}`)
   logger.info(`Server started on port ${PORT}`);
   logger.info(`API running at http://localhost:${PORT}`);
+  logger.info(`API docs running at http://localhost:${PORT}/api/v1/docs`);
+  logger.debug(`You can check health status on http://localhost:${PORT}/api/v1/health`);
+
 });

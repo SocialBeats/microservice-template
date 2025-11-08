@@ -5,11 +5,15 @@ import { marked } from 'marked';
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import yaml from 'js-yaml';
+import { getVersion } from "../utils/versionUtils.js";
+
 
 export default function aboutRoutes(app) {
 
     const API_TITLE = process.env.API_TITLE || "Microservice API"
     const API_DESCRIPTION = process.env.API_DESCRIPTION || "This is an OAS description of this Microservice REST API"
+    const version = getVersion();
+
 
     // Swagger options
     const swaggerOptions = {
@@ -17,7 +21,7 @@ export default function aboutRoutes(app) {
         openapi: '3.0.0',
         info: {
             title: API_TITLE,
-            version: '2.0.0',
+            version: version,
             description: API_DESCRIPTION,
         },
         servers: [

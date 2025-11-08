@@ -77,7 +77,13 @@ A basic Node.js microservice template designed to help you quickly bootstrap mic
 npm test
 ```
 
-Tests are located in the `tests/` folder and can include both unit and integration tests.
+Tests are located in the `tests/` folder and can include both unit and integration tests. You can see
+A report will be created in ***/coverage*** folder. Check the console and the index.html to see the results.
+test coverage by running this command.
+
+```bash
+npm run test:coverage
+```
 
 ## Logging
 

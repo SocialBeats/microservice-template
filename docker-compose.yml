@@ -25,10 +25,12 @@ services:
       - MONGOURL=${MONGOURL}
       - MONGOADMIN=${MONGOADMIN}
       - MONGOPASS=${MONGOPASS}
-      - MONGOURL=${MONGOURL}
       - NODE_ENV=production
-      - API_PREFIX=/api/v1
+      - PORT=${PORT}
+      - LOG_LEVEL=${LOG_LEVEL}
       - JWT_SECRET=${JWT_SECRET}
+      - API_TITLE=${API_TITLE}
+      - API_DESCRIPTION=${API_DESCRIPTION}
     depends_on:
       - mongodb
     networks:

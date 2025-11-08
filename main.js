@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from "url";
 import logger from "./logger.js";
+import { connectDB } from "./src/db.js";
+
 // import your routes here 
 import aboutRoutes from "./src/routes/aboutRoutes.js";
 import healthRoutes from "./src/routes/healthRoutes.js";
@@ -24,6 +26,9 @@ app.use(cors());
 // add your routes here like this:
 aboutRoutes(app)
 healthRoutes(app)
+
+
+await connectDB();
 
 app.listen(PORT, () => {
   logger.warn(`Using log level: ${process.env.LOG_LEVEL}`)

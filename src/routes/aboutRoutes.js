@@ -18,7 +18,7 @@ export default function aboutRoutes(app) {
         info: {
             title: API_TITLE,
             version: '2.0.0',
-            description: 'LCW API documentation.',
+            description: API_DESCRIPTION,
         },
         servers: [
             {
@@ -45,11 +45,11 @@ export default function aboutRoutes(app) {
     if (!fs.existsSync(specDir)) fs.mkdirSync(specDir, { recursive: true });
     fs.writeFileSync(path.join(specDir, 'oas.yaml'), yamlSpec);
 
-    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+    app.use('/api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
     /**
      * @swagger
-     * /api/about:
+     * /api/v1/about:
      *   get:
      *     tags:
      *       - Documentation
@@ -72,7 +72,7 @@ export default function aboutRoutes(app) {
      *               description: Error message when the file cannot be read.
      *               example: "Error reading the file: [error details]"
      */
-    app.get('/api/about', async (req, res) => {
+    app.get('/api/v1/about', async (req, res) => {
         try {
         const readmePath = path.join(path.resolve(), 'README.md');
         const data = await fs.promises.readFile(readmePath, 'utf8');
@@ -86,7 +86,7 @@ export default function aboutRoutes(app) {
 
     /**
          * @swagger
-         * /api/version:
+         * /api/v1/version:
          *   get:
          *     tags:
          *       - Documentation
@@ -120,7 +120,7 @@ export default function aboutRoutes(app) {
          *                   description: Detailed error message.
          *                   example: "ENOENT: no such file or directory, open '.version'"
          */
-    app.get('/api/version', async (req, res) => {
+    app.get('/api/v1/version', async (req, res) => {
         try {
         const versionPath = path.join(path.resolve(), '.version');
         const data = await fs.promises.readFile(versionPath, 'utf8');
@@ -136,7 +136,7 @@ export default function aboutRoutes(app) {
 
     /**
      * @swagger
-     * /api/changelog:
+     * /api/v1/changelog:
      *   get:
      *     tags:
      *       - Documentation
@@ -180,7 +180,7 @@ export default function aboutRoutes(app) {
      *               description: Error message when the changelog cannot be read.
      *               example: "There was an error retrieving API release notes: ENOENT: no such file or directory, open 'CHANGELOG.md'"
      */
-    app.get('/api/changelog', async (req, res) => {
+    app.get('/api/v1/changelog', async (req, res) => {
         try {
         const changelogPath = path.join(path.resolve(), 'CHANGELOG.md');
         const data = await fs.promises.readFile(changelogPath, 'utf8');

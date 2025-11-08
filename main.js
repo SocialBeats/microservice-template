@@ -5,7 +5,6 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import logger from "./logger.js";
 import { connectDB } from "./src/db.js";
-
 // import your routes here 
 import aboutRoutes from "./src/routes/aboutRoutes.js";
 import healthRoutes from "./src/routes/healthRoutes.js";
@@ -13,7 +12,6 @@ import healthRoutes from "./src/routes/healthRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
 dotenv.config({ path: path.resolve(__dirname, ".env"), quiet: true });
 
 const PORT = process.env.PORT || 3000;
@@ -28,13 +26,20 @@ aboutRoutes(app)
 healthRoutes(app)
 
 
-await connectDB();
+const isTest = process.env.NODE_ENV === "test" || process.env.VITEST;
 
-app.listen(PORT, () => {
-  logger.warn(`Using log level: ${process.env.LOG_LEVEL}`)
-  logger.info(`Server started on port ${PORT}`);
-  logger.info(`API running at http://localhost:${PORT}`);
-  logger.info(`API docs running at http://localhost:${PORT}/api/v1/docs`);
-  logger.debug(`You can check health status on http://localhost:${PORT}/api/v1/health`);
+// only start server and connect to DB if not in test mode
+if (!isTest) {
+  await connectDB();
 
-});
+  app.listen(PORT, () => {
+    logger.warn(`Using log level: ${process.env.LOG_LEVEL}`);
+    logger.info(`Server started on port ${PORT}`);
+    logger.info(`API running at http://localhost:${PORT}`);
+    logger.info(`Health at http://localhost:${PORT}/api/v1/health`);
+    logger.info(`Environment: ${process.env.NODE_ENV}`);
+  });
+}
+
+
+export default app;

@@ -173,6 +173,15 @@ const openPaths = [
 ];
 ```
 
+## Linting
+
+You will have a better experience developing using ***.vscode*** feautres provided in this template. To do so, you must first install the following extensions in your vs-code:
+
+* Prettier - Code formatter
+* ESLint
+
+Once you have them, the code will lint some stuff once you save a file. Do not worry because in case you do not want it to do so, just go to ***.vscode\settings.json*** and deactivate this feature with ***"editor.formatOnSave": false***.
+
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.  

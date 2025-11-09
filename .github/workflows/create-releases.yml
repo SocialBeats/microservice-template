@@ -52,18 +52,19 @@ jobs:
           echo "MICROSERVICE_NAME=$REPO_NAME" >> $GITHUB_ENV
           echo "DOCKER_IMAGE=${{ env.DOCKER_HUB_NAMESPACE }}/$REPO_NAME" >> $GITHUB_ENV
 
-      - name: Generate release notes from merged PRs
+      - name: Generate release notes from commits between tags
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME^" --always || echo "")
+          PREV_TAG=$(git describe --tags --abbrev=0 "$TAG_NAME^" 2>/dev/null || echo "")
+
           echo "Generating release notes for tag: $TAG_NAME"
           echo "Previous tag: $PREV_TAG"
 
           if [ -z "$PREV_TAG" ]; then
-            PRs=$(gh pr list --state merged --base main --json number,title,author,url)
+            COMMITS=$(git log --pretty=format:"%H")
           else
-            PRs=$(gh pr list --state merged --base main --search "merged:>$PREV_TAG" --json number,title,author,url)
+            COMMITS=$(git log --pretty=format:"%H" "$PREV_TAG..$TAG_NAME")
           fi
 
           FEATURES=""
@@ -73,24 +74,21 @@ jobs:
           FIXES=""
           OTHER=""
 
-          for pr in $(echo "$PRs" | jq -c '.[]'); do
-            NUMBER=$(echo $pr | jq -r '.number')
-            TITLE=$(echo $pr | jq -r '.title')
-            URL=$(echo $pr | jq -r '.url')
-
-            if [[ "$TITLE" =~ ^(feat|ci|test|tests|perf|build|fix|refactor|chore|style|docs|doc): ]]; then
+          for sha in $COMMITS; do
+            MSG=$(git log -1 --pretty=format:"%s" $sha)
+            if [[ "$MSG" =~ ^(feat|ci|test|tests|perf|build|fix|refactor|chore|style|docs|doc): ]]; then
               TYPE="${BASH_REMATCH[1]}"
-              DESC="${TITLE#*: }"
+              DESC="${MSG#*: }"
               case "$TYPE" in
-                feat) FEATURES+="- feat: $DESC ([PR#$NUMBER]($URL))\n" ;;
-                test|tests) TESTS+="- test: $DESC ([PR#$NUMBER]($URL))\n" ;;
-                docs|doc) DOCS+="- docs: $DESC ([PR#$NUMBER]($URL))\n" ;;
-                ci) CI+="- ci: $DESC ([PR#$NUMBER]($URL))\n" ;;
-                fix) FIXES+="- fix: $DESC ([PR#$NUMBER]($URL))\n" ;;
-                *) OTHER+="- $TYPE: $DESC ([PR#$NUMBER]($URL))\n" ;;
+                feat) FEATURES+="- feat: $DESC\n" ;;
+                test|tests) TESTS+="- test: $DESC\n" ;;
+                docs|doc) DOCS+="- docs: $DESC\n" ;;
+                ci) CI+="- ci: $DESC\n" ;;
+                fix) FIXES+="- fix: $DESC\n" ;;
+                *) OTHER+="- $TYPE: $DESC\n" ;;
               esac
             else
-              OTHER+="- $TITLE ([PR#$NUMBER]($URL))\n"
+              OTHER+="- $MSG\n"
             fi
           done
 

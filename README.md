@@ -160,6 +160,19 @@ Please ***DO NOT*** touch `.version` and `CHANGELOG.md`, and do not forget to us
 
 In order to keep track of API features bear in mind to add ***/api/vX/*** preffix to all your endpoints where X is the version of each one. In case you are changing an existing one, then use ***/api/vX+1/***. **By default the preffix is /api/v1/**.
 
+By default, all new endpoints require authentication via JWT. However, you can add new open endpoints like this:
+Go to ***./src/middlewares/authMiddlewares.js*** and add your new open routes here:
+
+```javascript
+const openPaths = [
+  '/api/v1/docs/',
+  '/api/v1/health',
+  '/api/v1/about',
+  '/api/v1/changelog',
+  '/api/v1/version',
+];
+```
+
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.  

@@ -5,6 +5,8 @@ import path from 'path';
 import { fileURLToPath } from "url";
 import logger from "./logger.js";
 import { connectDB } from "./src/db.js";
+// import your middlewares here
+import verifyToken from "./src/middlewares/authMiddlewares.js";
 // import your routes here 
 import aboutRoutes from "./src/routes/aboutRoutes.js";
 import healthRoutes from "./src/routes/healthRoutes.js";
@@ -21,6 +23,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// add your middlewares here like this:
+app.use(verifyToken)
+
 // add your routes here like this:
 aboutRoutes(app)
 healthRoutes(app)
@@ -34,9 +39,9 @@ if (process.env.NODE_ENV !== "test") {
 
     app.listen(PORT, () => {
       logger.warn(`Using log level: ${process.env.LOG_LEVEL}`);
-      logger.info(`Server started on port ${PORT}`);
       logger.info(`API running at http://localhost:${PORT}`);
       logger.info(`Health at http://localhost:${PORT}/api/v1/health`);
+      logger.info(`API docs running at http://localhost:${PORT}/api/v1/docs`);
       logger.info(`Environment: ${process.env.NODE_ENV}`);
     });
 

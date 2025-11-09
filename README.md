@@ -156,6 +156,10 @@ Please ***DO NOT*** touch `.version` and `CHANGELOG.md`, and do not forget to us
 
 ```
 
+## API Developement
+
+In order to keep track of API features bear in mind to add ***/api/vX/*** preffix to all your endpoints where X is the version of each one. In case you are changing an existing one, then use ***/api/vX+1/***. **By default the preffix is /api/v1/**.
+
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.  

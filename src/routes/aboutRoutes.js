@@ -9,35 +9,33 @@ import { getVersion } from "../utils/versionUtils.js";
 
 
 export default function aboutRoutes(app) {
-
     const API_TITLE = process.env.API_TITLE || "Microservice API"
     const API_DESCRIPTION = process.env.API_DESCRIPTION || "This is an OAS description of this Microservice REST API"
     const version = getVersion();
 
-
     // Swagger options
     const swaggerOptions = {
         definition: {
-        openapi: '3.0.0',
-        info: {
-            title: API_TITLE,
-            version: version,
-            description: API_DESCRIPTION,
-        },
-        servers: [
-            {
-            url: 'http://localhost:3000',
+            openapi: '3.0.0',
+            info: {
+                title: API_TITLE,
+                version: version,
+                description: API_DESCRIPTION,
             },
-        ],
-        components: {
-            securitySchemes: {
-            bearerAuth: {
-                type: 'http',
-                scheme: 'bearer',
-                bearerFormat: 'JWT',
+            servers: [
+                {
+                    url: 'http://localhost:3000',
+                },
+            ],
+            components: {
+                securitySchemes: {
+                    bearerAuth: {
+                        type: 'http',
+                        scheme: 'bearer',
+                        bearerFormat: 'JWT',
+                    },
+                },
             },
-            },
-        },
         },
         apis: ['./src/routes/*.js'],
     };
@@ -78,13 +76,13 @@ export default function aboutRoutes(app) {
      */
     app.get('/api/v1/about', async (req, res) => {
         try {
-        const readmePath = path.join(path.resolve(), 'README.md');
-        const data = await fs.promises.readFile(readmePath, 'utf8');
-        const htmlContent = marked.parse(data);
-        res.send(htmlContent);
+            const readmePath = path.join(path.resolve(), 'README.md');
+            const data = await fs.promises.readFile(readmePath, 'utf8');
+            const htmlContent = marked.parse(data);
+            res.send(htmlContent);
         } catch (err) {
-        logger.error('Error reading README file: ' + err);
-        res.status(500).send('Error reading the file: ' + err.message);
+            logger.error('Error reading README file: ' + err);
+            res.status(500).send('Error reading the file: ' + err.message);
         }
     });
 
@@ -126,15 +124,15 @@ export default function aboutRoutes(app) {
          */
     app.get('/api/v1/version', async (req, res) => {
         try {
-        const versionPath = path.join(path.resolve(), '.version');
-        const data = await fs.promises.readFile(versionPath, 'utf8');
-        res.status(200).json({ message: data.trim() });
+            const versionPath = path.join(path.resolve(), '.version');
+            const data = await fs.promises.readFile(versionPath, 'utf8');
+            res.status(200).json({ message: data.trim() });
         } catch (err) {
-        logger.error('Error reading .version file: ' + err);
-        res.status(500).json({
-            message: 'There was an error retrieving API version',
-            error: err.message,
-        });
+            logger.error('Error reading .version file: ' + err);
+            res.status(500).json({
+                message: 'There was an error retrieving API version',
+                error: err.message,
+            });
         }
     });
 
@@ -186,53 +184,53 @@ export default function aboutRoutes(app) {
      */
     app.get('/api/v1/changelog', async (req, res) => {
         try {
-        const changelogPath = path.join(path.resolve(), 'CHANGELOG.md');
-        const data = await fs.promises.readFile(changelogPath, 'utf8');
+            const changelogPath = path.join(path.resolve(), 'CHANGELOG.md');
+            const data = await fs.promises.readFile(changelogPath, 'utf8');
 
-        const { versions, from, to } = req.query;
-        let filteredContent = '';
+            const { versions, from, to } = req.query;
+            let filteredContent = '';
 
-        const releases = data
-            .split(/^# Release /m)
-            .filter(r => r.trim())
-            .map(r => '# Release ' + r);
+            const releases = data
+                .split(/^# Release /m)
+                .filter(r => r.trim())
+                .map(r => '# Release ' + r);
 
-        if (versions) {
-            const versionList = versions.split(',').map(v => v.trim());
-            filteredContent = releases
-            .filter(r => versionList.some(v => r.includes(`# Release ${v}`)))
-            .join('\n');
-        } else if (from || to) {
-            const getVersionNumber = (releaseStr) => {
-            const match = releaseStr.match(/^# Release v(\d+\.\d+\.\d+)/m);
-            return match ? match[1] : '';
-            };
-            const fromVer = from ? from.replace(/^v/, '') : null;
-            const toVer = to ? to.replace(/^v/, '') : null;
+            if (versions) {
+                const versionList = versions.split(',').map(v => v.trim());
+                filteredContent = releases
+                    .filter(r => versionList.some(v => r.includes(`# Release ${v}`)))
+                    .join('\n');
+            } else if (from || to) {
+                const getVersionNumber = (releaseStr) => {
+                    const match = releaseStr.match(/^# Release v(\d+\.\d+\.\d+)/m);
+                    return match ? match[1] : '';
+                };
+                const fromVer = from ? from.replace(/^v/, '') : null;
+                const toVer = to ? to.replace(/^v/, '') : null;
 
-            const inRange = (ver) => {
-            const compare = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
-            if (fromVer && compare(ver, fromVer) < 0) return false;
-            if (toVer && compare(ver, toVer) > 0) return false;
-            return true;
-            };
+                const inRange = (ver) => {
+                    const compare = (a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+                    if (fromVer && compare(ver, fromVer) < 0) return false;
+                    if (toVer && compare(ver, toVer) > 0) return false;
+                    return true;
+                };
 
-            filteredContent = releases
-            .filter(r => {
-                const ver = getVersionNumber(r);
-                return ver && inRange(ver);
-            })
-            .join('\n');
-        } else {
-            filteredContent = data;
-        }
+                filteredContent = releases
+                    .filter(r => {
+                        const ver = getVersionNumber(r);
+                        return ver && inRange(ver);
+                    })
+                    .join('\n');
+            } else {
+                filteredContent = data;
+            }
 
-        const htmlContent = marked.parse(filteredContent);
-        res.send(htmlContent);
+            const htmlContent = marked.parse(filteredContent);
+            res.send(htmlContent);
 
         } catch (err) {
-        logger.error('Error reading CHANGELOG.md file: ' + err);
-        res.status(500).send('Error retrieving API release notes: ' + err.message);
+            logger.error('Error reading CHANGELOG.md file: ' + err);
+            res.status(500).send('Error retrieving API release notes: ' + err.message);
         }
     });
 }

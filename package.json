@@ -6,6 +6,11 @@
     "test:coverage": "cross-env NODE_ENV=test vitest --coverage --run",
     "prepare": "husky"
   },
+  "lint-staged": {
+    "*.{js,ts,json,css,md}": [
+      "prettier --write"
+    ]
+  },
   "type": "module",
   "dependencies": {
     "cors": "^2.8.5",
@@ -28,6 +33,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.7",
+    "lint-staged": "^16.2.6",
     "nodemon": "^3.1.10",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",

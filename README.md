@@ -181,6 +181,18 @@ You will have a better experience developing using **_.vscode_** feautres provid
 
 Once you have them, the code will lint some stuff once you save a file. Do not worry because in case you do not want it to do so, just go to **_.vscode\settings.json_** and deactivate this feature with **_"editor.formatOnSave": false_**.
 
+If you want to scan all your project you can use this command:
+
+```bash
+npm run lint
+```
+
+There is a command to fix lint problems. To do so, just run this:
+
+```bash
+npm run lint:fix
+```
+
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.

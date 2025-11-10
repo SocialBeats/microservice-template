@@ -1,6 +1,6 @@
-import request from "supertest";
-import app from "../../main.js";
-import { connectDB, disconnectDB } from "../../src/db.js";
+import request from 'supertest';
+import app from '../../main.js';
+import { connectDB, disconnectDB } from '../../src/db.js';
 
 beforeAll(async () => {
   await connectDB();

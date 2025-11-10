@@ -10,11 +10,12 @@ const openPaths = [
 ];
 
 const verifyToken = (req, res, next) => {
-  if (openPaths.some(path => req.path.startsWith(path))) {
+  if (openPaths.some((path) => req.path.startsWith(path))) {
     return next();
-  }
-  else if(!req.path.startsWith('/api/v')){
-    return res.status(400).json({ message: 'You must specify the API version, e.g. /api/v1/...' });
+  } else if (!req.path.startsWith('/api/v')) {
+    return res
+      .status(400)
+      .json({ message: 'You must specify the API version, e.g. /api/v1/...' });
   }
 
   const token = req.headers.authorization?.split(' ')[1];

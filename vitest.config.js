@@ -1,17 +1,16 @@
-import path from "path";
-import { defineConfig } from "vitest/config";
-
+import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
     globals: true,
-    environment: "node",
-    setupFiles: ["./tests/setup/setup.js"],
+    environment: 'node',
+    setupFiles: ['./tests/setup/setup.js'],
     coverage: {
-      provider: "istanbul",
-      reporter: ["text", "html"],
+      provider: 'istanbul',
+      reporter: ['text', 'html'],
       all: true,
-      reportsDirectory: path.resolve("./coverage")
+      reportsDirectory: path.resolve('./coverage'),
     },
   },
 });

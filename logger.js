@@ -16,7 +16,7 @@ const levelColors = {
   error: '\x1b[31m', // Red
   debug: '\x1b[32m', // Green
   verbose: '\x1b[38;2;161;74;189m', // Purple
-  silly: '\x1b[35m' // Magenta
+  silly: '\x1b[35m', // Magenta
 };
 
 const resetColor = '\x1b[0m';
@@ -29,10 +29,7 @@ const logFormat = format.printf(({ level, message, timestamp }) => {
 const logger = createLogger({
   level: logLevel,
   format: format.combine(format.timestamp(), logFormat),
-  transports: [
-    new transports.Console({ level: logLevel })
-  ]
+  transports: [new transports.Console({ level: logLevel })],
 });
-
 
 export default logger;

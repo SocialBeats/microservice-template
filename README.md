@@ -193,6 +193,8 @@ There is a command to fix lint problems. To do so, just run this:
 npm run lint:fix
 ```
 
+By default, your vs-code will autolint your stayed files once you decide that you want to commit. Anyways there is a workflow for linting external code, and you can fix lint format with those two commands. This enviroment is meant to be confortable so you do not have to worry about anything related with lint. However, everything can be disabled (do it under your own risks, as its not recommended).
+
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.

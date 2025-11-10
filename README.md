@@ -185,3 +185,42 @@ Once you have them, the code will lint some stuff once you save a file. Do not w
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.  
+
+There are hooks to avoid commiting weird stuff.
+
+## Commit Convention
+
+To maintain a clean and consistent git history, all commits must follow this convention:
+
+```git
+<type>: <short description>
+```
+
+### Allowed Types
+
+* **feat** → new feature
+* **fix** → bug fix
+* **docs / doc** → documentation
+* **style** → formatting, no code logic changes
+* **refactor** → code refactoring
+* **perf** → performance improvement
+* **test / tests** → adding or updating tests
+* **build** → changes in build system or dependencies
+* **ci** → continuous integration
+* **chore** → maintenance tasks
+* **sec** → security improvements
+
+### Examples of Valid Commits
+
+```text
+feat: add login endpoint
+fix: correct user password validation
+docs: update README with new instructions
+style: format code with prettier
+refactor: optimize database queries
+perf: improve response time
+test: add unit tests for auth
+ci: update GitHub Actions workflow
+chore: remove deprecated package
+sec: hash passwords with bcrypt
+```

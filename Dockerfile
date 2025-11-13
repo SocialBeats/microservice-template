@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN npm ci --production && \
-    rm -rf $(npm get cache)
+RUN npm ci --omit=dev --ignore-scripts
+RUN rm -rf $(npm get cache)
 
 ENTRYPOINT ["node", "main.js"]

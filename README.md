@@ -8,25 +8,27 @@ A basic Node.js microservice template designed to help you quickly bootstrap mic
 
 ```fs
 .
-├── src/               # Application source code
-├── tests/             # Unit and integration tests
-├── spec/              # Test specifications or additional test resources
-├── .github/           # GitHub workflows and configurations
-├── Dockerfile         # Docker image definition
-├── docker-compose.yml # Docker Compose setup
-├── package.json       # Node.js dependencies and scripts
-├── .env.example       # Example environment variables
-└── logger.js          # App Logger
+├── src/                          # Application source code
+├── tests/                        # Unit and integration tests
+├── spec/                         # Test specifications or additional test resources
+├── .github/                      # GitHub workflows and configurations
+├── Dockerfile                    # Docker image definition
+├── docker-compose.yml            # Docker Compose setup
+├── package.json                  # Node.js dependencies and scripts
+├── .env.example                  # Example environment variables
+├── .env.docker.example           # Env template for hybrid (app in Docker, DB on host)
+├── .env.docker-compose.example   # Env template for full-docker
+└── logger.js                     # App Logger
 ```
 
 ## Prerequisites
 
-- Node.js (LTS recommended)
+- Node.js 20+ (LTS recommended)
 - npm
-- Docker (optional, for containerized development)
+- Docker (optional)
 - Docker Compose (optional)
 
-## Installation
+## Installation and Running
 
 1. Clone the repository:
 
@@ -41,35 +43,130 @@ A basic Node.js microservice template designed to help you quickly bootstrap mic
    npm install
    ```
 
-3. Copy environment variables:
+3. Choose your development environment and run:
+
+   ### Local Development
 
    ```bash
-   cp .env.example .env
+   npm run dev:local
    ```
 
-   **_NOTE:_** Modify your env vairables as pleased. You can add more if needed.
+   **What it does:**
+   - Copies `.env.example` to `.env`
+   - Starts the application locally using `npm start`
+   - The app runs on your machine and connects to MongoDB on `localhost:27017`
 
-   By default your microservice will run on **_port 3000_**. Use **_API_TITLE_** and **_API_DESCRIPTION_** to
-   custom the Swagger UI and improve your documentation.
+   **What you need:**
+   - MongoDB installed and running locally on port 27017
+   - The `.env` file will be configured with:
+     ```
+     MONGOURL=mongodb://localhost:27017/microservice-template
+     MONGOTESTURL=mongodb://localhost:27017/microservice-template_test
+     ```
+   - Edit other variables in `.env` as needed (JWT_SECRET, LOG_LEVEL, etc.)
 
-4. Start the service locally:
+   ### Hybrid Development (App in Docker, Database on Host)
 
    ```bash
-   npm start
+   npm run dev:docker
    ```
 
-   Or using Docker:
+   **What it does:**
+   - Copies `.env.docker.example` to `.env`
+   - Builds a Docker image of your application
+   - Runs the application inside a Docker container
+   - The containerized app connects to MongoDB running on your host machine
+
+   **What you need:**
+   - MongoDB installed and running locally on port 27017
+   - **MongoDB MUST be configured to accept connections from Docker containers**
+   - The `.env` file will be configured with:
+     ```
+     MONGOURL=mongodb://host.docker.internal:27017/microservice-template
+     MONGOTESTURL=mongodb://host.docker.internal:27017/microservice-template_test
+     ```
+
+   **⚠️ IMPORTANT: MongoDB Configuration for Docker Access**
+
+   By default, MongoDB only listens on `localhost` (127.0.0.1), which means Docker containers cannot connect to it. You need to configure MongoDB to accept connections from all interfaces.
+
+   **For Linux:**
+   1. Edit the MongoDB configuration file:
+      ```bash
+      sudo nano /etc/mongod.conf
+      ```
+   2. Find the `net` section and modify `bindIp`:
+      ```yaml
+      net:
+        port: 27017
+        bindIp: 0.0.0.0
+      ```
+   3. Save the file and restart MongoDB:
+      ```bash
+      sudo systemctl restart mongod
+      ```
+   4. Verify MongoDB is listening on all interfaces:
+      ```bash
+      sudo netstat -tuln | grep 27017
+      ```
+      You should see `0.0.0.0:27017` in the output.
+
+   **For Windows:**
+   1. Locate and edit the MongoDB configuration file:
+      ```
+      C:\Program Files\MongoDB\Server\<version>\bin\mongod.cfg
+      ```
+      (Replace `<version>` with your MongoDB version, e.g., `7.0`)
+   2. Find the `net` section and modify `bindIp`:
+      ```yaml
+      net:
+        port: 27017
+        bindIp: 0.0.0.0
+      ```
+   3. Save the file and restart the MongoDB service:
+      - Open **Services** (press `Win + R`, type `services.msc`, and press Enter)
+      - Find **MongoDB Server** in the list
+      - Right-click and select **Restart**
+   4. Alternatively, restart via Command Prompt (as Administrator):
+      ```cmd
+      net stop MongoDB
+      net start MongoDB
+      ```
+   5. Verify MongoDB is listening on all interfaces:
+      ```cmd
+      netstat -an | findstr :27017
+      ```
+      You should see `0.0.0.0:27017` in the output.
+
+   ### Full Docker Compose Development
 
    ```bash
-   docker build -t microservice-template .
-   docker run -p 3000:3000 microservice-template
+   npm run dev:compose
    ```
 
-   Or with Docker Compose:
+   **What it does:**
+   - Copies `.env.docker-compose.example` to `.env`
+   - Starts all services defined in `docker-compose.yml` using `docker-compose up --build`
+   - Runs both the application and MongoDB in isolated Docker containers
+   - This is the recommended approach for a consistent, production-like environment
 
-   ```bash
-   docker-compose up --build
-   ```
+   **What you need:**
+   - Docker and Docker Compose installed
+   - No local MongoDB installation required
+   - The `.env` file will be configured with:
+     ```
+     MONGOURL=mongodb://mongodb:27017/microservice-template
+     MONGOTESTURL=mongodb://mongodb:27017/microservice-template_test
+     ```
+   - The `mongodb` hostname refers to the MongoDB container defined in `docker-compose.yml`
+
+   ***
+
+   **General Notes:**
+   - By default, your microservice will run on **port 3000**
+   - Use **API_TITLE** and **API_DESCRIPTION** environment variables to customize the Swagger UI
+   - The **JWT_SECRET** should be changed in production environments
+   - Adjust **LOG_LEVEL** (error, warn, info, verbose, debug, silly) based on your needs
 
 ## Running Tests
 

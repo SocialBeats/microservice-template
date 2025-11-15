@@ -254,7 +254,7 @@ app.get('/api/v1/health', (req, res) => {
 
 ## API Developement
 
-In order to keep track of API features bear in mind to add **_/api/vX/_** preffix to all your endpoints where X is the version of each one. In case you are changing an existing one, then use **_/api/vX+1/_**. **By default the preffix is /api/v1/**.
+In order to keep track of API features bear in mind to add **_/api/vX/_** prefix to all your endpoints where X is the version of each one. In case you are changing an existing one, then use **_/api/vX+1/_**. **By default the prefix is /api/v1/**.
 
 By default, all new endpoints require authentication via JWT. However, you can add new open endpoints like this:
 Go to **_./src/middlewares/authMiddlewares.js_** and add your new open routes here:
@@ -271,7 +271,7 @@ const openPaths = [
 
 ## Linting
 
-You will have a better experience developing using **_.vscode_** feautres provided in this template. To do so, you must first install the following extensions in your vs-code:
+You will have a better experience developing using **_.vscode_** features provided in this template. To do so, you must first install the following extensions in your vs-code:
 
 - Prettier - Code formatter
 - ESLint
@@ -290,13 +290,13 @@ There is a command to fix lint problems. To do so, just run this:
 npm run lint:fix
 ```
 
-By default, your vs-code will autolint your stayed files once you decide that you want to commit. Anyways there is a workflow for linting external code, and you can fix lint format with those two commands. This enviroment is meant to be confortable so you do not have to worry about anything related with lint. However, everything can be disabled (do it under your own risks, as its not recommended).
+By default, your vs-code will autolint your stayed files once you decide that you want to commit. Anyways there is a workflow for linting external code, and you can fix lint format with those two commands. This environment is meant to be comfortable so you do not have to worry about anything related with lint. However, everything can be disabled (do it at your own risks, as its not recommended).
 
 ## Conventional Commits
 
 This project follows the **[Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)** specification, which provides a standard way to structure commit messages.
 
-There are hooks to avoid commiting weird stuff.
+There are hooks to avoid committing weird stuff.
 
 ## Commit Convention
 
